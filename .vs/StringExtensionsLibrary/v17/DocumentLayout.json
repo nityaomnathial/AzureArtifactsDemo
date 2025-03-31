@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\nitya\\source\\repos\\StringExtensionsLibrary\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CD158F0E-F53A-4344-925F-8D0A451BF2C2}|StringTestApp\\StringTestApp.csproj|c:\\users\\nitya\\source\\repos\\stringextensionslibrary\\stringtestapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CD158F0E-F53A-4344-925F-8D0A451BF2C2}|StringTestApp\\StringTestApp.csproj|solutionrelative:stringtestapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FE8B2288-73B0-4F8F-AD73-FAC68F9B28D5}|StringExtensionsLibrary\\StringExtensionsLibrary.csproj|c:\\users\\nitya\\source\\repos\\stringextensionslibrary\\stringextensionslibrary\\stringextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FE8B2288-73B0-4F8F-AD73-FAC68F9B28D5}|StringExtensionsLibrary\\StringExtensionsLibrary.csproj|solutionrelative:stringextensionslibrary\\stringextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\nitya\\source\\repos\\StringExtensionsLibrary\\StringTestApp\\Program.cs",
+              "RelativeDocumentMoniker": "StringTestApp\\Program.cs",
+              "ToolTip": "C:\\Users\\nitya\\source\\repos\\StringExtensionsLibrary\\StringTestApp\\Program.cs",
+              "RelativeToolTip": "StringTestApp\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-31T23:31:34.424Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "StringExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\nitya\\source\\repos\\StringExtensionsLibrary\\StringExtensionsLibrary\\StringExtensions.cs",
+              "RelativeDocumentMoniker": "StringExtensionsLibrary\\StringExtensions.cs",
+              "ToolTip": "C:\\Users\\nitya\\source\\repos\\StringExtensionsLibrary\\StringExtensionsLibrary\\StringExtensions.cs",
+              "RelativeToolTip": "StringExtensionsLibrary\\StringExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-31T23:24:52.771Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
