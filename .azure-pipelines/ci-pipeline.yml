@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: Default  # <- This uses your self-hosted agent
+  name: Default  # Your self-hosted agent pool
 
 variables:
   buildConfiguration: 'Release'
@@ -20,8 +20,21 @@ steps:
 - script: dotnet pack StringExtensionsLibrary/StringExtensionsLibrary.csproj -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)
   displayName: 'Pack NuGet Package'
 
-- task: NuGetCommand@2
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    publishVstsFeed: 'nnathial/CI-CD-AzureArtifacts'
+- script: |
+    nuget push "$(Build.ArtifactStagingDirectory)\*.nupkg" ^
+    -Source "https://pkgs.dev.azure.com/nnathial/_packaging/CI-CD-AzureArtifacts/nuget/v3/index.json" ^
+    -ApiKey VSTS ^
+    -NonInteractive
+  displayName: 'Push NuGet Package to Azure Artifacts'
+  env:
+    NUGET_CREDENTIALPROVIDER_SESSIONTOKENCACHE_ENABLED: "true"
+    VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: >
+      {
+        "endpointCredentials": [
+          {
+            "endpoint": "https://pkgs.dev.azure.com/nnathial/_packaging/CI-CD-AzureArtifacts/nuget/v3/index.json",
+            "username": "AzureDevOps",
+            "password": "$(System.AccessToken)"
+          }
+        ]
+      }
