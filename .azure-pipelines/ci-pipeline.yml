@@ -2,24 +2,24 @@ trigger:
 - main
 
 pool:
-  name: Default  # Self-hosted agent
+  name: Default  # Your self-hosted agent pool
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-# 🔧 Install .NET 8 SDK
+# ✅ Use .NET 8 SDK
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
     version: '8.0.x'
     installationPath: $(Agent.ToolsDirectory)/dotnet
 
-# ✅ Make sure System.AccessToken works in script steps
+# ✅ Ensure access to System.AccessToken
 - checkout: self
   persistCredentials: true
 
-# 🏗️ Build the class library
+# 🔧 Build the class library
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'Build Class Library'
 
@@ -27,20 +27,18 @@ steps:
 - script: dotnet pack StringExtensionsLibrary/StringExtensionsLibrary.csproj -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)
   displayName: 'Pack NuGet Package'
 
-# 🚀 Push the package using dotnet nuget push
+# 🔑 Configure the feed source manually with token
+- script: |
+    dotnet nuget add source "https://pkgs.dev.azure.com/nnathial/CI-CD-AzureArtifacts/_packaging/StringLibFeed/nuget/v3/index.json" ^
+    --name AzureArtifacts ^
+    --username AzureDevOps ^
+    --password $(System.AccessToken) ^
+    --store-password-in-clear-text
+  displayName: 'Configure NuGet Feed Source'
+
+# 🚀 Push the package using the authenticated source
 - script: |
     dotnet nuget push "$(Build.ArtifactStagingDirectory)\*.nupkg" ^
-    --source "https://pkgs.dev.azure.com/nnathial/CI-CD-AzureArtifacts/_packaging/StringLibFeed/nuget/v3/index.json" ^
-    --api-key $(System.AccessToken)
+    --source AzureArtifacts ^
+    --api-key AzureDevOps
   displayName: 'Push NuGet Package to Azure Artifacts'
-  env:
-    VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: >
-      {
-        "endpointCredentials": [
-          {
-            "endpoint": "https://pkgs.dev.azure.com/nnathial/_packaging/CI-CD-AzureArtifacts/nuget/v3/index.json",
-            "username": "AzureDevOps",
-            "password": "$(System.AccessToken)"
-          }
-        ]
-      }
