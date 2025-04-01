@@ -30,7 +30,7 @@ steps:
 # 🚀 Push the package using dotnet nuget push
 - script: |
     dotnet nuget push "$(Build.ArtifactStagingDirectory)\*.nupkg" ^
-    --source "https://pkgs.dev.azure.com/nnathial/_packaging/CI-CD-AzureArtifacts/nuget/v3/index.json" ^
+    --source "https://pkgs.dev.azure.com/nnathial/CI-CD-AzureArtifacts/_packaging/StringLibFeed/nuget/v3/index.json" ^
     --api-key $(System.AccessToken)
   displayName: 'Push NuGet Package to Azure Artifacts'
   env:
