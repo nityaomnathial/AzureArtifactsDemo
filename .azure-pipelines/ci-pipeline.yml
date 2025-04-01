@@ -2,36 +2,38 @@ trigger:
 - main
 
 pool:
-  name: Default
+  name: Default  # Self-hosted agent
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
+# 🔧 Install .NET 8 SDK
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
     version: '8.0.x'
     installationPath: $(Agent.ToolsDirectory)/dotnet
 
-# ✅ This line ensures the OAuth token is available to later tasks
+# ✅ Make sure System.AccessToken works in script steps
 - checkout: self
   persistCredentials: true
 
+# 🏗️ Build the class library
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'Build Class Library'
 
+# 📦 Pack the NuGet package
 - script: dotnet pack StringExtensionsLibrary/StringExtensionsLibrary.csproj -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)
   displayName: 'Pack NuGet Package'
 
+# 🚀 Push the package using dotnet nuget push
 - script: |
-    nuget push "$(Build.ArtifactStagingDirectory)\*.nupkg" ^
-    -Source "https://pkgs.dev.azure.com/nnathial/_packaging/CI-CD-AzureArtifacts/nuget/v3/index.json" ^
-    -ApiKey VSTS ^
-    -NonInteractive
+    dotnet nuget push "$(Build.ArtifactStagingDirectory)\*.nupkg" ^
+    --source "https://pkgs.dev.azure.com/nnathial/_packaging/CI-CD-AzureArtifacts/nuget/v3/index.json" ^
+    --api-key AzureDevOps
   displayName: 'Push NuGet Package to Azure Artifacts'
   env:
-    NUGET_CREDENTIALPROVIDER_SESSIONTOKENCACHE_ENABLED: "true"
     VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: >
       {
         "endpointCredentials": [
