@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: Default  # Your self-hosted agent pool
+  name: Default
 
 variables:
   buildConfiguration: 'Release'
@@ -13,6 +13,10 @@ steps:
     packageType: 'sdk'
     version: '8.0.x'
     installationPath: $(Agent.ToolsDirectory)/dotnet
+
+# ✅ This line ensures the OAuth token is available to later tasks
+- checkout: self
+  persistCredentials: true
 
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'Build Class Library'
