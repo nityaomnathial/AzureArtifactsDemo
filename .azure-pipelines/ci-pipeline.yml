@@ -27,9 +27,6 @@ steps:
 - script: dotnet pack StringExtensionsLibrary/StringExtensionsLibrary.csproj -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)
   displayName: 'Pack NuGet Package'
 
-- script: |
-    dotnet nuget remove source AzureArtifacts || echo "No AzureArtifacts source to remove"
-  displayName: 'Cleanup Old NuGet Source (Optional)'
 
 # 🔑 Configure the feed source manually with token
 - script: |
