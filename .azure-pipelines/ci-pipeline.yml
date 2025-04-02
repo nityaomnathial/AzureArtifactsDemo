@@ -2,37 +2,37 @@ trigger:
 - main
 
 pool:
-  name: Default
+  name: Default  # Self-hosted agent
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-# 🔧 .NET SDK Setup
+# 🧱 Use .NET SDK
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
     version: '8.0.x'
     installationPath: $(Agent.ToolsDirectory)/dotnet
 
-# 🔑 Enable OAuth token for push
+# 🔐 Enable access to OAuth token
 - checkout: self
   persistCredentials: true
 
-# 🏗️ Build your library
+# 🏗️ Build the library
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'Build Class Library'
 
-# 📦 Pack it up
+# 📦 Pack into a NuGet package
 - script: dotnet pack StringExtensionsLibrary/StringExtensionsLibrary.csproj -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)
   displayName: 'Pack NuGet Package'
 
-# 💣 REMOVE old source (if it exists) to prevent error
+# 🧹 Remove old feed source (if already added in a previous run)
 - script: |
     dotnet nuget remove source StringLibSource || echo "Source did not exist, moving on..."
-  displayName: 'Clean Previous NuGet Source'
+  displayName: 'Remove Previous NuGet Source (Safe Cleanup)'
 
-# 🔁 ADD source (fresh + clean)
+# 🔁 Add your Azure Artifact feed source manually
 - script: |
     dotnet nuget add source "https://pkgs.dev.azure.com/nnathial/CI-CD-AzureArtifacts/_packaging/StringLibFeed/nuget/v3/index.json" ^
     --name StringLibSource ^
@@ -41,9 +41,10 @@ steps:
     --store-password-in-clear-text
   displayName: 'Add NuGet Feed Source'
 
-# 🚀 PUSH like a boss
+# 🚀 Push the package, skip if already exists (no red ❌)
 - script: |
     dotnet nuget push "$(Build.ArtifactStagingDirectory)\*.nupkg" ^
     --source StringLibSource ^
-    --api-key AzureDevOps
-  displayName: 'Push NuGet Package to Azure Artifacts'
+    --api-key AzureDevOps ^
+    --skip-duplicate
+  displayName: 'Push NuGet Package to Azure Artifacts (Safe Push)'
