@@ -2,42 +2,46 @@ trigger:
 - main
 
 pool:
-  name: Default  # Your self-hosted agent pool
+  name: Default
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-# ✅ Use .NET 8 SDK
+# 🔧 .NET SDK Setup
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
     version: '8.0.x'
     installationPath: $(Agent.ToolsDirectory)/dotnet
 
-# ✅ Ensure access to System.AccessToken
+# 🔑 Enable OAuth token for push
 - checkout: self
   persistCredentials: true
 
-# 🔧 Build the class library
+# 🏗️ Build your library
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'Build Class Library'
 
-# 📦 Pack the NuGet package
+# 📦 Pack it up
 - script: dotnet pack StringExtensionsLibrary/StringExtensionsLibrary.csproj -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)
   displayName: 'Pack NuGet Package'
 
+# 💣 REMOVE old source (if it exists) to prevent error
+- script: |
+    dotnet nuget remove source StringLibSource || echo "Source did not exist, moving on..."
+  displayName: 'Clean Previous NuGet Source'
 
-# 🔑 Configure the feed source manually with token
+# 🔁 ADD source (fresh + clean)
 - script: |
     dotnet nuget add source "https://pkgs.dev.azure.com/nnathial/CI-CD-AzureArtifacts/_packaging/StringLibFeed/nuget/v3/index.json" ^
     --name StringLibSource ^
     --username AzureDevOps ^
     --password $(System.AccessToken) ^
     --store-password-in-clear-text
-  displayName: 'Configure NuGet Feed Source'
+  displayName: 'Add NuGet Feed Source'
 
-# 🚀 Push the package using the authenticated source
+# 🚀 PUSH like a boss
 - script: |
     dotnet nuget push "$(Build.ArtifactStagingDirectory)\*.nupkg" ^
     --source StringLibSource ^
